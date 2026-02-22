@@ -37,13 +37,13 @@ import java.util.stream.Collectors;
 public enum JvmSettings {
     // the upmost root scope - every setting shall start with it.
     PREFIX("dataverse"),
-    
+
     // GENERAL SETTINGS
     VERSION(PREFIX, "version"),
     BUILD(PREFIX, "build"),
     FQDN(PREFIX, "fqdn"),
     SITE_URL(PREFIX, "siteUrl"),
-    
+
     // FILES SETTINGS
     SCOPE_FILES(PREFIX, "files"),
     FILES_DIRECTORY(SCOPE_FILES, "directory"),
@@ -58,10 +58,10 @@ public enum JvmSettings {
     HIDE_SCHEMA_DOT_ORG_DOWNLOAD_URLS(SCOPE_FILES, "hide-schema-dot-org-download-urls"),
     DEFAULT_DATASET_FILE_COUNT_LIMIT(SCOPE_FILES, "default-dataset-file-count-limit"),
 
-    //STORAGE DRIVER SETTINGS
+    // STORAGE DRIVER SETTINGS
     SCOPE_DRIVER(SCOPE_FILES),
     DISABLE_S3_TAGGING(SCOPE_DRIVER, "disable-tagging"),
-    
+
     // SOLR INDEX SETTINGS
     SCOPE_SOLR(PREFIX, "solr"),
     SOLR_HOST(SCOPE_SOLR, "host"),
@@ -70,7 +70,6 @@ public enum JvmSettings {
     SOLR_CORE(SCOPE_SOLR, "core"),
     SOLR_PATH(SCOPE_SOLR, "path"),
     MIN_FILES_TO_USE_PROXY(SCOPE_SOLR, "min-files-to-use-proxy"),
-
 
     // INDEX CONCURENCY
     SCOPE_SOLR_CONCURENCY(SCOPE_SOLR, "concurrency"),
@@ -83,7 +82,7 @@ public enum JvmSettings {
     RSERVE_USER(SCOPE_RSERVE, "user"),
     RSERVE_PASSWORD(SCOPE_RSERVE, "password"),
     RSERVE_TEMPDIR(SCOPE_RSERVE, "tempdir"),
-    
+
     // API SETTINGS
     SCOPE_API(PREFIX, "api"),
     API_SIGNING_SECRET(SCOPE_API, "signing-secret"),
@@ -96,7 +95,6 @@ public enum JvmSettings {
     // API: MDC Citation updates
     SCOPE_API_MDC(SCOPE_API, "mdc"),
     API_MDC_UPDATE_MIN_DELAY_MS(SCOPE_API_MDC, "min-delay-ms"),
-    
 
     // SIGNPOSTING SETTINGS
     SCOPE_SIGNPOSTING(PREFIX, "signposting"),
@@ -105,10 +103,11 @@ public enum JvmSettings {
 
     // FEATURE FLAGS SETTINGS
     SCOPE_FLAGS(PREFIX, "feature"),
-    // This is a special placeholder-type setting entry, to be filled in by FeatureFlag entries during lookup.
+    // This is a special placeholder-type setting entry, to be filled in by
+    // FeatureFlag entries during lookup.
     // Avoids adding flag entries twice.
     FEATURE_FLAG(SCOPE_FLAGS),
-    
+
     // METADATA SETTINGS
     SCOPE_METADATA(PREFIX, "metadata"),
     MDB_SYSTEM_METADATA_KEYS(SCOPE_METADATA, "block-system-metadata-keys"),
@@ -128,13 +127,12 @@ public enum JvmSettings {
     PID_PROVIDER_MANAGED_LIST(SCOPE_PID_PROVIDER, "managed-list"),
     PID_PROVIDER_EXCLUDED_LIST(SCOPE_PID_PROVIDER, "excluded-list"),
 
-        
     // PROVIDER EZID - these settings were formerly kept together with DataCite ones
     SCOPE_PID_EZID(SCOPE_PID_PROVIDER, "ezid"),
     EZID_API_URL(SCOPE_PID_EZID, "api-url"),
     EZID_USERNAME(SCOPE_PID_EZID, "username"),
     EZID_PASSWORD(SCOPE_PID_EZID, "password"),
-    
+
     // PROVIDER DATACITE
     SCOPE_PID_DATACITE(SCOPE_PID_PROVIDER, "datacite"),
     DATACITE_MDS_API_URL(SCOPE_PID_DATACITE, "mds-api-url"),
@@ -155,7 +153,7 @@ public enum JvmSettings {
     SCOPE_PID_PERMALINK(SCOPE_PID_PROVIDER, "permalink"),
     PERMALINK_BASE_URL(SCOPE_PID_PERMALINK, "base-url"),
     PERMALINK_SEPARATOR(SCOPE_PID_PERMALINK, "separator"),
-    
+
     // PROVIDER HANDLE
     SCOPE_PID_HANDLENET(SCOPE_PID_PROVIDER, "handlenet"),
     HANDLENET_INDEX(SCOPE_PID_HANDLENET, "index"),
@@ -164,6 +162,10 @@ public enum JvmSettings {
     SCOPE_PID_HANDLENET_KEY(SCOPE_PID_HANDLENET, "key"),
     HANDLENET_KEY_PATH(SCOPE_PID_HANDLENET_KEY, "path"),
     HANDLENET_KEY_PASSPHRASE(SCOPE_PID_HANDLENET_KEY, "passphrase"),
+
+    // PROVIDER DID
+    SCOPE_PID_DID(SCOPE_PID_PROVIDER, "did"),
+    DID_API_URL(SCOPE_PID_DID, "api-url"),
 
     /*
      * The deprecated legacy settings below are from when you could only have a
@@ -220,13 +222,13 @@ public enum JvmSettings {
     EXPORTERS_DIRECTORY(SCOPE_EXPORTERS, "directory"),
     SCOPE_PIDPROVIDERS(SCOPE_SPI, "pidproviders"),
     PIDPROVIDERS_DIRECTORY(SCOPE_PIDPROVIDERS, "directory"),
-    
+
     // SEARCH SERVICES SETTINGS
     SCOPE_SEARCH(PREFIX, "search"),
     SCOPE_SEARCHSERVICES(SCOPE_SEARCH, "services"),
     SEARCHSERVICES_DIRECTORY(SCOPE_SEARCHSERVICES, "directory"),
     DEFAULT_SEARCH_SERVICE(SCOPE_SEARCH, "default-service"),
-    
+
     // MAIL SETTINGS
     SCOPE_MAIL(PREFIX, "mail"),
     SYSTEM_EMAIL(SCOPE_MAIL, "system-email"),
@@ -241,7 +243,7 @@ public enum JvmSettings {
     MAIL_MTA_SUPPORT_UTF8(SCOPE_MAIL_MTA, "allow-utf8-addresses"),
     // Placeholder setting for a large list of extra settings
     MAIL_MTA_SETTING(SCOPE_MAIL_MTA),
-    
+
     // AUTH SETTINGS
     SCOPE_AUTH(PREFIX, "auth"),
     // AUTH: OIDC SETTINGS
@@ -280,14 +282,15 @@ public enum JvmSettings {
     // STORAGE USE SETTINGS
     SCOPE_STORAGEUSE(PREFIX, "storageuse"),
     STORAGEUSE_DISABLE_UPDATES(SCOPE_STORAGEUSE, "disable-storageuse-increments"),
-    
-    //CSL CITATION SETTINGS
+
+    // CSL CITATION SETTINGS
     SCOPE_CSL(PREFIX, "csl"),
     CSL_COMMON_STYLES(SCOPE_CSL, "common-styles"),
 
     // PersonOrOrgUtil SETTINGS
     SCOPE_PERSONORORG(PREFIX, "person-or-org"),
-    ASSUME_COMMA_IN_PERSON_NAME(SCOPE_PERSONORORG, "assume-comma-in-person-name", "dataverse.personOrOrg.assumeCommaInPersonName"),
+    ASSUME_COMMA_IN_PERSON_NAME(SCOPE_PERSONORORG, "assume-comma-in-person-name",
+            "dataverse.personOrOrg.assumeCommaInPersonName"),
     ORG_PHRASE_ARRAY(SCOPE_PERSONORORG, "org-phrase-array"),
 
     // CORS SETTINGS
@@ -297,33 +300,35 @@ public enum JvmSettings {
     SCOPE_CORS_HEADERS(SCOPE_CORS, "headers"),
     CORS_ALLOW_HEADERS(SCOPE_CORS_HEADERS, "allow"),
     CORS_EXPOSE_HEADERS(SCOPE_CORS_HEADERS, "expose"),
-    
+
     // LOCALCONTEXTS
     SCOPE_LOCALCONTEXTS(PREFIX, "localcontexts"),
     LOCALCONTEXTS_URL(SCOPE_LOCALCONTEXTS, "url"),
     LOCALCONTEXTS_API_KEY(SCOPE_LOCALCONTEXTS, "api-key"),
-    
+
     // LinkedDataNotification
     SCOPE_LINKEDDATANOTIFICATION(PREFIX, "ldn"),
     LINKEDDATANOTIFICATION_ALLOWED_HOSTS(SCOPE_LINKEDDATANOTIFICATION, "allowed-hosts"),
     SCOPE_COARNOTIFY(SCOPE_LINKEDDATANOTIFICATION, "coar-notify"),
     SCOPE_COARNOTIFY_RELATIONSHIP_ANNOUNCEMENT(SCOPE_COARNOTIFY, "relationship-announcement"),
-    COARNOTIFY_RELATIONSHIP_ANNOUNCEMENT_NOTIFY_SUPERUSERS_ONLY(SCOPE_COARNOTIFY_RELATIONSHIP_ANNOUNCEMENT, "notify-superusers-only"),
-    ;
+    COARNOTIFY_RELATIONSHIP_ANNOUNCEMENT_NOTIFY_SUPERUSERS_ONLY(SCOPE_COARNOTIFY_RELATIONSHIP_ANNOUNCEMENT,
+            "notify-superusers-only"),
+            ;
 
     private static final String SCOPE_SEPARATOR = ".";
     public static final String PLACEHOLDER_KEY = "%s";
     private static final Pattern OLD_NAME_PLACEHOLDER_PATTERN = Pattern.compile("%(\\d\\$)?s");
-    
+
     private final String key;
     private final String scopedKey;
     @SuppressWarnings("unused")
     private final JvmSettings parent;
     private final List<String> oldNames;
     private final int placeholders;
-    
+
     /**
      * Create a root scope.
+     * 
      * @param key The scopes name.
      */
     JvmSettings(String key) {
@@ -333,12 +338,14 @@ public enum JvmSettings {
         this.oldNames = List.of();
         this.placeholders = 0;
     }
-    
+
     /**
      * Create a scope or setting with a placeholder for a variable argument in it.
-     * Used to create "configurable objects" with certain attributes using dynamic, programmatic lookup.
+     * Used to create "configurable objects" with certain attributes using dynamic,
+     * programmatic lookup.
      *
-     * Any placeholder present in a settings full scoped key will be replaced when looked up
+     * Any placeholder present in a settings full scoped key will be replaced when
+     * looked up
      * via {@link #lookup(Class, String...)}.
      *
      * @param scope The parent scope.
@@ -350,11 +357,12 @@ public enum JvmSettings {
         this.oldNames = List.of();
         this.placeholders = scope.placeholders + 1;
     }
-    
+
     /**
      * Create a scope or setting with name it and associate with a parent scope.
+     * 
      * @param scope The parent scope.
-     * @param key The name of this scope or setting.
+     * @param key   The name of this scope or setting.
      */
     JvmSettings(JvmSettings scope, String key) {
         this.key = key;
@@ -363,20 +371,26 @@ public enum JvmSettings {
         this.oldNames = List.of();
         this.placeholders = scope.placeholders;
     }
-    
+
     /**
      * Create a setting with name it and associate with a parent scope.
-     * (Could also be a scope, but old names for scopes aren't the way this is designed.)
+     * (Could also be a scope, but old names for scopes aren't the way this is
+     * designed.)
      *
-     * When old names are given, these need to be given as fully scoped setting names! (Otherwise
+     * When old names are given, these need to be given as fully scoped setting
+     * names! (Otherwise
      * it would not be possible to switch between completely different scopes.)
      *
-     * @param scope The parent scope of this setting.
-     * @param key The name of the setting.
+     * @param scope    The parent scope of this setting.
+     * @param key      The name of the setting.
      * @param oldNames Any previous names this setting was known as.
-     *                 Must be given as fully scopes names, not just the old unscoped key/name.
-     *                 Used by {@link edu.harvard.iq.dataverse.settings.source.AliasConfigSource} to allow backward
-     *                 compatible, non-breaking deprecation and switching to new setting names.
+     *                 Must be given as fully scopes names, not just the old
+     *                 unscoped key/name.
+     *                 Used by
+     *                 {@link edu.harvard.iq.dataverse.settings.source.AliasConfigSource}
+     *                 to allow backward
+     *                 compatible, non-breaking deprecation and switching to new
+     *                 setting names.
      */
     JvmSettings(JvmSettings scope, String key, String... oldNames) {
         this.key = key;
@@ -385,7 +399,7 @@ public enum JvmSettings {
         this.oldNames = Arrays.stream(oldNames).collect(Collectors.toUnmodifiableList());
         this.placeholders = scope.placeholders;
     }
-    
+
     private static final List<JvmSettings> aliased = new ArrayList<>();
     static {
         for (JvmSettings setting : JvmSettings.values()) {
@@ -394,221 +408,280 @@ public enum JvmSettings {
             }
         }
     }
-    
+
     /**
-     * Get all settings having old names to include them in {@link edu.harvard.iq.dataverse.settings.source.AliasConfigSource}
-     * @return List of settings with old alias names. Can be empty, but will not be null.
+     * Get all settings having old names to include them in
+     * {@link edu.harvard.iq.dataverse.settings.source.AliasConfigSource}
+     * 
+     * @return List of settings with old alias names. Can be empty, but will not be
+     *         null.
      */
     public static List<JvmSettings> getAliasedSettings() {
         return Collections.unmodifiableList(aliased);
     }
-    
+
     /**
      * Return a list of old names to be used as aliases for backward compatibility.
      * Will return empty list if no old names present.
      *
-     * This method should only be used by {@link edu.harvard.iq.dataverse.settings.source.AliasConfigSource}.
-     * In case of a setting containing placeholder(s), it will check any old names given in the definition
-     * for presence of at least one placeholder plus it doesn't use more placeholders than available.
-     * (Old names containing placeholders for settings without any are checked, too.)
+     * This method should only be used by
+     * {@link edu.harvard.iq.dataverse.settings.source.AliasConfigSource}.
+     * In case of a setting containing placeholder(s), it will check any old names
+     * given in the definition
+     * for presence of at least one placeholder plus it doesn't use more
+     * placeholders than available.
+     * (Old names containing placeholders for settings without any are checked,
+     * too.)
      *
-     * Violations will result in a {@link IllegalArgumentException} and will be noticed during any test execution.
+     * Violations will result in a {@link IllegalArgumentException} and will be
+     * noticed during any test execution.
      * A developer must fix the old name definition before shipping the code.
      *
      * @return List of old names, may be empty, but never null.
-     * @throws IllegalArgumentException When an old name has no or too many placeholders for this setting.
+     * @throws IllegalArgumentException When an old name has no or too many
+     *                                  placeholders for this setting.
      */
     public List<String> getOldNames() {
         if (needsVarArgs()) {
             for (String name : oldNames) {
                 long matches = OLD_NAME_PLACEHOLDER_PATTERN.matcher(name).results().count();
-                
+
                 if (matches == 0) {
                     throw new IllegalArgumentException("JvmSettings." + this.name() + "'s old name '" +
-                        name + "' needs at least one placeholder");
+                            name + "' needs at least one placeholder");
                 } else if (matches > this.placeholders) {
                     throw new IllegalArgumentException("JvmSettings." + this.name() + "'s old name '" +
-                        name + "' has more placeholders than the current name");
+                            name + "' has more placeholders than the current name");
                 }
             }
-        } else if (! this.oldNames.stream().noneMatch(OLD_NAME_PLACEHOLDER_PATTERN.asPredicate())) {
-            throw new IllegalArgumentException("JvmSettings." + this.name() + " has no placeholder but old name requires it");
+        } else if (!this.oldNames.stream().noneMatch(OLD_NAME_PLACEHOLDER_PATTERN.asPredicate())) {
+            throw new IllegalArgumentException(
+                    "JvmSettings." + this.name() + " has no placeholder but old name requires it");
         }
-        
+
         return oldNames;
     }
-    
+
     /**
      * Retrieve the scoped key for this setting. Scopes are separated by dots.
-     * If the setting contains placeholders, these will be represented as {@link #PLACEHOLDER_KEY}.
+     * If the setting contains placeholders, these will be represented as
+     * {@link #PLACEHOLDER_KEY}.
      *
-     * @return The scoped key (or the key if no scope). Example: dataverse.subscope.subsubscope.key
+     * @return The scoped key (or the key if no scope). Example:
+     *         dataverse.subscope.subsubscope.key
      */
     public String getScopedKey() {
         return this.scopedKey;
     }
-    
+
     public Pattern getPatternizedKey() {
         return Pattern.compile(
-            getScopedKey()
-                .replace(SCOPE_SEPARATOR, "\\.")
-                .replace(PLACEHOLDER_KEY, "(.+?)"));
+                getScopedKey()
+                        .replace(SCOPE_SEPARATOR, "\\.")
+                        .replace(PLACEHOLDER_KEY, "(.+?)"));
     }
-    
-    
+
     /**
      * Does this setting carry and placeholders for variable arguments?
+     * 
      * @return True if so, False otherwise.
      */
     public boolean needsVarArgs() {
         return this.placeholders > 0;
     }
-    
+
     /**
-     * Return the number of placeholders / variable arguments are necessary to lookup this setting.
-     * An exact match in the number of arguments will be necessary for a successful lookup.
+     * Return the number of placeholders / variable arguments are necessary to
+     * lookup this setting.
+     * An exact match in the number of arguments will be necessary for a successful
+     * lookup.
+     * 
      * @return Number of placeholders for this scoped setting.
      */
     public int numberOfVarArgs() {
         return placeholders;
     }
-    
+
     /**
-     * Lookup this setting via MicroProfile Config as a required option (it will fail if not present).
-     * @throws java.util.NoSuchElementException - if the property is not defined or is defined as an empty string
+     * Lookup this setting via MicroProfile Config as a required option (it will
+     * fail if not present).
+     * 
+     * @throws java.util.NoSuchElementException - if the property is not defined or
+     *                                          is defined as an empty string
      * @return The setting as a String
      */
     public String lookup() {
         return lookup(String.class);
     }
-    
+
     /**
      * Lookup this setting via MicroProfile Config as an optional setting.
+     * 
      * @return The setting as String wrapped in a (potentially empty) Optional
      */
     public Optional<String> lookupOptional() {
         return lookupOptional(String.class);
     }
-    
+
     /**
-     * Lookup this setting via MicroProfile Config as a required option (it will fail if not present).
+     * Lookup this setting via MicroProfile Config as a required option (it will
+     * fail if not present).
      *
-     * @param klass The target type class to convert the setting to if found and not null
+     * @param klass The target type class to convert the setting to if found and not
+     *              null
      * @return The setting as an instance of {@link T}
-     * @param <T> Target type to convert the setting to (you can create custom converters)
+     * @param <T> Target type to convert the setting to (you can create custom
+     *            converters)
      *
-     * @throws java.util.NoSuchElementException When the property is not defined or is defined as an empty string.
-     * @throws IllegalArgumentException When the settings value could not be converted to target type.
+     * @throws java.util.NoSuchElementException When the property is not defined or
+     *                                          is defined as an empty string.
+     * @throws IllegalArgumentException         When the settings value could not be
+     *                                          converted to target type.
      */
     public <T> T lookup(Class<T> klass) {
         if (needsVarArgs()) {
             throw new IllegalArgumentException("Cannot lookup a setting containing placeholders with this method.");
         }
-        
-        // This must be done with the full-fledged lookup, as we cannot store the config in an instance or static
-        // variable, as the alias config source depends on this enum (circular dependency). This is easiest
-        // avoided by looking up the static cached config at the cost of a method invocation.
+
+        // This must be done with the full-fledged lookup, as we cannot store the config
+        // in an instance or static
+        // variable, as the alias config source depends on this enum (circular
+        // dependency). This is easiest
+        // avoided by looking up the static cached config at the cost of a method
+        // invocation.
         return ConfigProvider.getConfig().getValue(this.getScopedKey(), klass);
     }
-    
+
     /**
      * Lookup this setting via MicroProfile Config as an optional setting.
      *
-     * @param klass The target type class to convert the setting to if found and not null
-     * @param <T> Target type to convert the setting to (you can create custom converters)
-     * @return The setting as an instance of {@link Optional<T>} or an empty Optional
+     * @param klass The target type class to convert the setting to if found and not
+     *              null
+     * @param <T>   Target type to convert the setting to (you can create custom
+     *              converters)
+     * @return The setting as an instance of {@link Optional<T>} or an empty
+     *         Optional
      *
-     * @throws IllegalArgumentException When the settings value could not be converted to target type.
+     * @throws IllegalArgumentException When the settings value could not be
+     *                                  converted to target type.
      */
     public <T> Optional<T> lookupOptional(Class<T> klass) {
         if (needsVarArgs()) {
-            throw new IllegalArgumentException("Cannot lookup a setting containing variable arguments with this method.");
+            throw new IllegalArgumentException(
+                    "Cannot lookup a setting containing variable arguments with this method.");
         }
-        
-        // This must be done with the full-fledged lookup, as we cannot store the config in an instance or static
-        // variable, as the alias config source depends on this enum (circular dependency). This is easiest
-        // avoided by looking up the static cached config at the cost of a method invocation.
+
+        // This must be done with the full-fledged lookup, as we cannot store the config
+        // in an instance or static
+        // variable, as the alias config source depends on this enum (circular
+        // dependency). This is easiest
+        // avoided by looking up the static cached config at the cost of a method
+        // invocation.
         return ConfigProvider.getConfig().getOptionalValue(this.getScopedKey(), klass);
     }
-    
+
     /**
-     * Lookup a required setting containing placeholders for arguments like a name and return as plain String.
+     * Lookup a required setting containing placeholders for arguments like a name
+     * and return as plain String.
      * To use type conversion, use {@link #lookup(Class, String...)}.
      *
      * @param arguments The var args to replace the placeholders of this setting.
      * @return The value of the setting.
      *
-     * @throws java.util.NoSuchElementException When the setting has not been set in any MPCONFIG source or is an empty string.
-     * @throws IllegalArgumentException When using it on a setting without placeholders.
-     * @throws IllegalArgumentException When not providing as many arguments as there are placeholders.
+     * @throws java.util.NoSuchElementException When the setting has not been set in
+     *                                          any MPCONFIG source or is an empty
+     *                                          string.
+     * @throws IllegalArgumentException         When using it on a setting without
+     *                                          placeholders.
+     * @throws IllegalArgumentException         When not providing as many arguments
+     *                                          as there are placeholders.
      */
     public String lookup(String... arguments) {
         return lookup(String.class, arguments);
     }
-    
+
     /**
-     * Lookup an optional setting containing placeholders for arguments like a name and return as plain String.
+     * Lookup an optional setting containing placeholders for arguments like a name
+     * and return as plain String.
      * To use type conversion, use {@link #lookupOptional(Class, String...)}.
      *
      * @param arguments The var args to replace the placeholders of this setting.
-     * @return The value as an instance of {@link Optional<String>} or an empty Optional
+     * @return The value as an instance of {@link Optional<String>} or an empty
+     *         Optional
      *
-     * @throws IllegalArgumentException When using it on a setting without placeholders.
-     * @throws IllegalArgumentException When not providing as many arguments as there are placeholders.
+     * @throws IllegalArgumentException When using it on a setting without
+     *                                  placeholders.
+     * @throws IllegalArgumentException When not providing as many arguments as
+     *                                  there are placeholders.
      */
     public Optional<String> lookupOptional(String... arguments) {
         return lookupOptional(String.class, arguments);
     }
-    
+
     /**
-     * Lookup a required setting containing placeholders for arguments like a name and return as converted type.
+     * Lookup a required setting containing placeholders for arguments like a name
+     * and return as converted type.
      * To avoid type conversion, use {@link #lookup(String...)}.
      *
-     * @param klass The target type class.
+     * @param klass     The target type class.
      * @param arguments The var args to replace the placeholders of this setting.
-     * @param <T> Target type to convert the setting to (you can create custom converters)
+     * @param <T>       Target type to convert the setting to (you can create custom
+     *                  converters)
      * @return The value of the setting, converted to the given type.
      *
-     * @throws java.util.NoSuchElementException When the setting has not been set in any MPCONFIG source or is an empty string.
-     * @throws IllegalArgumentException When using it on a setting without placeholders.
-     * @throws IllegalArgumentException When not providing as many arguments as there are placeholders.
-     * @throws IllegalArgumentException When the settings value could not be converted to the target type.
+     * @throws java.util.NoSuchElementException When the setting has not been set in
+     *                                          any MPCONFIG source or is an empty
+     *                                          string.
+     * @throws IllegalArgumentException         When using it on a setting without
+     *                                          placeholders.
+     * @throws IllegalArgumentException         When not providing as many arguments
+     *                                          as there are placeholders.
+     * @throws IllegalArgumentException         When the settings value could not be
+     *                                          converted to the target type.
      */
     public <T> T lookup(Class<T> klass, String... arguments) {
         if (needsVarArgs()) {
             if (arguments == null || arguments.length != placeholders) {
-                throw new IllegalArgumentException("You must specify " + placeholders + " placeholder lookup arguments.");
+                throw new IllegalArgumentException(
+                        "You must specify " + placeholders + " placeholder lookup arguments.");
             }
             return ConfigProvider.getConfig().getValue(this.insert(arguments), klass);
         }
         throw new IllegalArgumentException("Cannot lookup a setting without variable arguments with this method.");
     }
-    
+
     /**
-     * Lookup an optional setting containing placeholders for arguments like a name and return as converted type.
+     * Lookup an optional setting containing placeholders for arguments like a name
+     * and return as converted type.
      * To avoid type conversion, use {@link #lookupOptional(String...)}.
      *
-     * @param klass The target type class.
+     * @param klass     The target type class.
      * @param arguments The var args to replace the placeholders of this setting.
-     * @param <T> Target type to convert the setting to (you can create custom converters)
+     * @param <T>       Target type to convert the setting to (you can create custom
+     *                  converters)
      * @return The value as an instance of {@link Optional<T>} or an empty Optional
      *
-     * @throws IllegalArgumentException When using it on a setting without placeholders.
-     * @throws IllegalArgumentException When not providing as many arguments as there are placeholders.
-     * @throws IllegalArgumentException When the settings value could not be converted to the target type.
+     * @throws IllegalArgumentException When using it on a setting without
+     *                                  placeholders.
+     * @throws IllegalArgumentException When not providing as many arguments as
+     *                                  there are placeholders.
+     * @throws IllegalArgumentException When the settings value could not be
+     *                                  converted to the target type.
      */
     public <T> Optional<T> lookupOptional(Class<T> klass, String... arguments) {
         if (needsVarArgs()) {
             if (arguments == null || arguments.length != placeholders) {
-                throw new IllegalArgumentException("You must specify " + placeholders + " placeholder lookup arguments.");
+                throw new IllegalArgumentException(
+                        "You must specify " + placeholders + " placeholder lookup arguments.");
             }
             return ConfigProvider.getConfig().getOptionalValue(this.insert(arguments), klass);
         }
         throw new IllegalArgumentException("Cannot lookup a setting without variable arguments with this method.");
     }
-    
+
     /**
-     * Inject arguments into the placeholders of this setting. Will not do anything when no placeholders present.
+     * Inject arguments into the placeholders of this setting. Will not do anything
+     * when no placeholders present.
      *
      * @param arguments The variable arguments to be inserted for the placeholders.
      * @return The formatted setting name.
@@ -616,17 +689,24 @@ public enum JvmSettings {
     public String insert(String... arguments) {
         return String.format(this.getScopedKey(), (Object[]) arguments);
     }
-    
+
     /**
-     * Lookup an optional comma-separated value and return the tokens as an immutable list.
-     * MicroProfile Config removes zero-length segments when it converts to {@code String[]}, but
-     * it leaves any leading or trailing whitespace on the surviving tokens (including tokens that
-     * contain only spaces). This convenience overload trims each token; after trimming, any token
-     * that becomes empty (because it consisted solely of whitespace) is discarded so callers still
-     * receive a list that is free of empty strings. Use the boolean overload with {@code false} if
+     * Lookup an optional comma-separated value and return the tokens as an
+     * immutable list.
+     * MicroProfile Config removes zero-length segments when it converts to
+     * {@code String[]}, but
+     * it leaves any leading or trailing whitespace on the surviving tokens
+     * (including tokens that
+     * contain only spaces). This convenience overload trims each token; after
+     * trimming, any token
+     * that becomes empty (because it consisted solely of whitespace) is discarded
+     * so callers still
+     * receive a list that is free of empty strings. Use the boolean overload with
+     * {@code false} if
      * you need the exact whitespace that MicroProfile provided.
      *
-     * @return an {@link Optional} containing the list of tokens when the setting is present;
+     * @return an {@link Optional} containing the list of tokens when the setting is
+     *         present;
      *         an empty {@link Optional} if the setting is not configured
      */
     public Optional<List<String>> lookupSplittedListOptional() {
@@ -634,56 +714,73 @@ public enum JvmSettings {
     }
 
     /**
-    * Lookup an optional comma-separated value and return the tokens as an immutable list.
-    *
-    * @param trimSpaces when {@code true}, individual elements are trimmed; tokens that become empty after
-    *                   trimming (because they were all whitespace) are removed to preserve MicroProfile's
-    *                   "no empty entries" guarantee; when {@code false}, the tokens are returned exactly as
-    *                   produced by MicroProfile Config
-     * @return an {@link Optional} containing the list of tokens when the setting is present;
+     * Lookup an optional comma-separated value and return the tokens as an
+     * immutable list.
+     *
+     * @param trimSpaces when {@code true}, individual elements are trimmed; tokens
+     *                   that become empty after
+     *                   trimming (because they were all whitespace) are removed to
+     *                   preserve MicroProfile's
+     *                   "no empty entries" guarantee; when {@code false}, the
+     *                   tokens are returned exactly as
+     *                   produced by MicroProfile Config
+     * @return an {@link Optional} containing the list of tokens when the setting is
+     *         present;
      *         an empty {@link Optional} if the setting is not configured
      */
     public Optional<List<String>> lookupSplittedListOptional(boolean trimSpaces) {
         return lookupOptional(String[].class)
-            .map(values -> Arrays.stream(values)
-                .map(s -> trimSpaces ? s.trim() : s)
-                .filter(s -> trimSpaces ? !s.isEmpty() : true)
-                .toList());
+                .map(values -> Arrays.stream(values)
+                        .map(s -> trimSpaces ? s.trim() : s)
+                        .filter(s -> trimSpaces ? !s.isEmpty() : true)
+                        .toList());
     }
 
     /**
-     * Lookup a required comma-separated value and return the tokens as an immutable list.
-     * MicroProfile Config removes zero-length segments when it converts to {@code String[]}, but it
-     * leaves any leading or trailing whitespace on the surviving tokens (including tokens that contain
-     * only spaces). This convenience overload trims each token; after trimming, any token that becomes
-     * empty (because it consisted solely of whitespace) is discarded so callers still receive a list that
-     * is free of empty strings. Use the boolean overload with {@code false} if you need the exact whitespace
+     * Lookup a required comma-separated value and return the tokens as an immutable
+     * list.
+     * MicroProfile Config removes zero-length segments when it converts to
+     * {@code String[]}, but it
+     * leaves any leading or trailing whitespace on the surviving tokens (including
+     * tokens that contain
+     * only spaces). This convenience overload trims each token; after trimming, any
+     * token that becomes
+     * empty (because it consisted solely of whitespace) is discarded so callers
+     * still receive a list that
+     * is free of empty strings. Use the boolean overload with {@code false} if you
+     * need the exact whitespace
      * that MicroProfile provided.
      *
      * @return the list of tokens for the configured setting
      * @throws java.util.NoSuchElementException if the setting is missing or blank
-     * @throws IllegalArgumentException if conversion to {@code String[]} fails
+     * @throws IllegalArgumentException         if conversion to {@code String[]}
+     *                                          fails
      */
     public List<String> lookupSplittedList() {
         return lookupSplittedList(true);
     }
 
     /**
-    * Lookup a required comma-separated value and return the tokens as an immutable list.
-    *
-    * @param trimSpaces when {@code true}, individual elements are trimmed; tokens that become empty after
-    *                   trimming (because they were all whitespace) are removed to preserve MicroProfile's
-    *                   "no empty entries" guarantee; when {@code false}, the tokens are returned exactly as
-    *                   produced by MicroProfile Config
+     * Lookup a required comma-separated value and return the tokens as an immutable
+     * list.
+     *
+     * @param trimSpaces when {@code true}, individual elements are trimmed; tokens
+     *                   that become empty after
+     *                   trimming (because they were all whitespace) are removed to
+     *                   preserve MicroProfile's
+     *                   "no empty entries" guarantee; when {@code false}, the
+     *                   tokens are returned exactly as
+     *                   produced by MicroProfile Config
      * @return the list of tokens for the configured setting
      * @throws java.util.NoSuchElementException if the setting is missing or blank
-     * @throws IllegalArgumentException if conversion to {@code String[]} fails
+     * @throws IllegalArgumentException         if conversion to {@code String[]}
+     *                                          fails
      */
     public List<String> lookupSplittedList(boolean trimSpaces) {
         return Arrays.stream(lookup(String[].class))
-            .map(s -> trimSpaces ? s.trim() : s)
-            .filter(s -> trimSpaces ? !s.isEmpty() : true)
-            .toList();
+                .map(s -> trimSpaces ? s.trim() : s)
+                .filter(s -> trimSpaces ? !s.isEmpty() : true)
+                .toList();
     }
 
 }

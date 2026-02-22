@@ -40,18 +40,18 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @LocalJvmSettings
 
-//HANDLE 1
+// HANDLE 1
 @JvmSetting(key = JvmSettings.PID_PROVIDER_LABEL, value = "HDL 1", varArgs = "hdl1")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_TYPE, value = HandlePidProvider.TYPE, varArgs = "hdl1")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_AUTHORITY, value = "20.500.1234", varArgs = "hdl1")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_SHOULDER, value = "test", varArgs = "hdl1")
-@JvmSetting(key = JvmSettings.PID_PROVIDER_MANAGED_LIST, value = "hdl:20.20.20/FK2ABCDEF", varArgs ="hdl1")
-@JvmSetting(key = JvmSettings.HANDLENET_AUTH_HANDLE, value = "20.500.1234/ADMIN", varArgs ="hdl1")
-@JvmSetting(key = JvmSettings.HANDLENET_INDEPENDENT_SERVICE, value = "true", varArgs ="hdl1")
-@JvmSetting(key = JvmSettings.HANDLENET_INDEX, value = "1", varArgs ="hdl1")
-@JvmSetting(key = JvmSettings.HANDLENET_KEY_PASSPHRASE, value = "passphrase", varArgs ="hdl1")
-@JvmSetting(key = JvmSettings.HANDLENET_KEY_PATH, value = "/tmp/cred", varArgs ="hdl1")
-//List to instantiate
+@JvmSetting(key = JvmSettings.PID_PROVIDER_MANAGED_LIST, value = "hdl:20.20.20/FK2ABCDEF", varArgs = "hdl1")
+@JvmSetting(key = JvmSettings.HANDLENET_AUTH_HANDLE, value = "20.500.1234/ADMIN", varArgs = "hdl1")
+@JvmSetting(key = JvmSettings.HANDLENET_INDEPENDENT_SERVICE, value = "true", varArgs = "hdl1")
+@JvmSetting(key = JvmSettings.HANDLENET_INDEX, value = "1", varArgs = "hdl1")
+@JvmSetting(key = JvmSettings.HANDLENET_KEY_PASSPHRASE, value = "passphrase", varArgs = "hdl1")
+@JvmSetting(key = JvmSettings.HANDLENET_KEY_PATH, value = "/tmp/cred", varArgs = "hdl1")
+// List to instantiate
 @JvmSetting(key = JvmSettings.PID_PROVIDERS, value = "hdl1")
 
 public class CitationServletTest {
@@ -62,7 +62,6 @@ public class CitationServletTest {
     HttpServletRequest request;
     @Mock
     HttpServletResponse response;
-    
 
     static CitationServlet citationServlet = new CitationServlet();
 
@@ -73,18 +72,20 @@ public class CitationServletTest {
 
         PidUtil.clearPidProviders();
 
-        //Read list of providers to add
+        // Read list of providers to add
         List<String> providers = Arrays.asList(JvmSettings.PID_PROVIDERS.lookup().split(",\\s"));
-        //Iterate through the list of providers and add them using the PidProviderFactory of the appropriate type
+        // Iterate through the list of providers and add them using the
+        // PidProviderFactory of the appropriate type
         for (String providerId : providers) {
             System.out.println("Loading provider: " + providerId);
             String type = JvmSettings.PID_PROVIDER_TYPE.lookup(providerId);
             PidProviderFactory factory = pidProviderFactoryMap.get(type);
-            PidUtil.addToProviderList(factory.createPidProvider(providerId));
+            PidUtil.addToProviderList(factory.createPidProvider(providerId, null));
         }
         PidUtil.addAllToUnmanagedProviderList(Arrays.asList(new UnmanagedDOIProvider(),
                 new UnmanagedHandlePidProvider(), new UnmanagedPermaLinkPidProvider()));
     }
+
     @BeforeEach
     public void initMocks() {
         MockitoAnnotations.initMocks(this);

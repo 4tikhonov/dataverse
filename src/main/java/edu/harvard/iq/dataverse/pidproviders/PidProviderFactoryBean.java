@@ -131,7 +131,8 @@ public class PidProviderFactoryBean {
                 } else {
                     String typeString = type.get();
                     if (pidProviderFactoryMap.containsKey(typeString)) {
-                        PidProvider provider = pidProviderFactoryMap.get(typeString).createPidProvider(id);
+                        PidProvider provider = pidProviderFactoryMap.get(typeString).createPidProvider(id,
+                                dvObjectService);
                         provider.setPidProviderServiceBean(this);
                         PidUtil.addToProviderList(provider);
                     }
@@ -157,53 +158,59 @@ public class PidProviderFactoryBean {
                 String dataFilePidFormat = settingsService.getValueForKey(SettingsServiceBean.Key.DataFilePIDFormat,
                         "DEPENDENT");
                 switch (protocol) {
-                case "doi":
-                    switch (provider) {
-                    case "EZID":
+                    case "doi":
+                        switch (provider) {
+                            case "EZID":
 
-                        String baseUrl = JvmSettings.LEGACY_EZID_API_URL.lookup();
-                        String username = JvmSettings.LEGACY_EZID_USERNAME.lookup();
-                        String password = JvmSettings.LEGACY_EZID_PASSWORD.lookup();
-                        PidUtil.addToProviderList(new EZIdDOIProvider("legacy", "legacy", authority, shoulder,
-                                identifierGenerationStyle, dataFilePidFormat, "", "", baseUrl, username, password));
+                                String baseUrl = JvmSettings.LEGACY_EZID_API_URL.lookup();
+                                String username = JvmSettings.LEGACY_EZID_USERNAME.lookup();
+                                String password = JvmSettings.LEGACY_EZID_PASSWORD.lookup();
+                                PidUtil.addToProviderList(new EZIdDOIProvider("legacy", "legacy", authority, shoulder,
+                                        identifierGenerationStyle, dataFilePidFormat, "", "", baseUrl, username,
+                                        password));
 
-                        break;
-                    case "DataCite":
-                        String mdsUrl = JvmSettings.LEGACY_DATACITE_MDS_API_URL.lookup();
-                        String restUrl = JvmSettings.LEGACY_DATACITE_REST_API_URL.lookup();
-                        // Defaults for testing where no account is set up
-                        String dcUsername = JvmSettings.LEGACY_DATACITE_USERNAME.lookup();
-                        String dcPassword = JvmSettings.LEGACY_DATACITE_PASSWORD.lookup();
-                        if (mdsUrl != null && restUrl != null && dcUsername != null && dcPassword != null) {
-                            legacy = new DataCiteDOIProvider("legacy", "legacy", authority, shoulder,
-                                    identifierGenerationStyle, dataFilePidFormat, "", "", mdsUrl, restUrl, dcUsername,
-                                    dcPassword);
+                                break;
+                            case "DataCite":
+                                String mdsUrl = JvmSettings.LEGACY_DATACITE_MDS_API_URL.lookup();
+                                String restUrl = JvmSettings.LEGACY_DATACITE_REST_API_URL.lookup();
+                                // Defaults for testing where no account is set up
+                                String dcUsername = JvmSettings.LEGACY_DATACITE_USERNAME.lookup();
+                                String dcPassword = JvmSettings.LEGACY_DATACITE_PASSWORD.lookup();
+                                if (mdsUrl != null && restUrl != null && dcUsername != null && dcPassword != null) {
+                                    legacy = new DataCiteDOIProvider("legacy", "legacy", authority, shoulder,
+                                            identifierGenerationStyle, dataFilePidFormat, "", "", mdsUrl, restUrl,
+                                            dcUsername,
+                                            dcPassword);
+                                }
+                                break;
+                            case "FAKE":
+                                logger.warning("Adding FAKE provider");
+                                legacy = new FakeDOIProvider("legacy", "legacy", authority, shoulder,
+                                        identifierGenerationStyle,
+                                        dataFilePidFormat, "", "");
+                                break;
                         }
                         break;
-                    case "FAKE":
-                        logger.warning("Adding FAKE provider");
-                        legacy = new FakeDOIProvider("legacy", "legacy", authority, shoulder, identifierGenerationStyle,
-                                dataFilePidFormat, "", "");
-                        break;
-                    }
-                    break;
-                case "hdl":
-                    int index = JvmSettings.LEGACY_HANDLENET_INDEX.lookup(Integer.class);
-                    String path = JvmSettings.LEGACY_HANDLENET_KEY_PATH.lookup();
-                    String passphrase = JvmSettings.LEGACY_HANDLENET_KEY_PASSPHRASE.lookup();
-                    boolean independentHandleService = settingsService
-                            .isTrueForKey(SettingsServiceBean.Key.IndependentHandleService, false);
-                    String handleAuthHandle = settingsService.getValueForKey(SettingsServiceBean.Key.HandleAuthHandle);
+                    case "hdl":
+                        int index = JvmSettings.LEGACY_HANDLENET_INDEX.lookup(Integer.class);
+                        String path = JvmSettings.LEGACY_HANDLENET_KEY_PATH.lookup();
+                        String passphrase = JvmSettings.LEGACY_HANDLENET_KEY_PASSPHRASE.lookup();
+                        boolean independentHandleService = settingsService
+                                .isTrueForKey(SettingsServiceBean.Key.IndependentHandleService, false);
+                        String handleAuthHandle = settingsService
+                                .getValueForKey(SettingsServiceBean.Key.HandleAuthHandle);
 
-                    legacy = new HandlePidProvider("legacy", "legacy", authority, shoulder, identifierGenerationStyle,
-                            dataFilePidFormat, "", "", index, independentHandleService, handleAuthHandle, path,
-                            passphrase);
-                    break;
-                case "perma":
-                    String baseUrl = JvmSettings.LEGACY_PERMALINK_BASEURL.lookupOptional().orElse(SystemConfig.getDataverseSiteUrlStatic());
-                    legacy = new PermaLinkPidProvider("legacy", "legacy", authority, shoulder,
-                            identifierGenerationStyle, dataFilePidFormat, "", "", baseUrl,
-                            PermaLinkPidProvider.SEPARATOR);
+                        legacy = new HandlePidProvider("legacy", "legacy", authority, shoulder,
+                                identifierGenerationStyle,
+                                dataFilePidFormat, "", "", index, independentHandleService, handleAuthHandle, path,
+                                passphrase);
+                        break;
+                    case "perma":
+                        String baseUrl = JvmSettings.LEGACY_PERMALINK_BASEURL.lookupOptional()
+                                .orElse(SystemConfig.getDataverseSiteUrlStatic());
+                        legacy = new PermaLinkPidProvider("legacy", "legacy", authority, shoulder,
+                                identifierGenerationStyle, dataFilePidFormat, "", "", baseUrl,
+                                PermaLinkPidProvider.SEPARATOR);
                 }
                 if (legacy != null) {
                     legacy.setPidProviderServiceBean(this);
@@ -221,7 +228,13 @@ public class PidProviderFactoryBean {
     }
 
     public boolean isGlobalIdLocallyUnique(GlobalId globalId) {
-         return dvObjectService.isGlobalIdLocallyUnique(globalId) && dvObjectService.isGlobalIdLocallyUniqueAlternativeIds(globalId);
+        return dvObjectService.isGlobalIdLocallyUnique(globalId)
+                && dvObjectService.isGlobalIdLocallyUniqueAlternativeIds(globalId);
+    }
+
+    public boolean isGlobalIdLocallyUnique(GlobalId globalId, edu.harvard.iq.dataverse.DvObject dvo) {
+        edu.harvard.iq.dataverse.DvObject found = dvObjectService.findByGlobalId(globalId);
+        return found == null || found.getId().equals(dvo.getId());
     }
 
     String generateNewIdentifierByStoredProcedure() {

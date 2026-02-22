@@ -6,11 +6,13 @@ import edu.harvard.iq.dataverse.pidproviders.PidProviderFactory;
 import edu.harvard.iq.dataverse.settings.JvmSettings;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+
 @AutoService(PidProviderFactory.class)
 public class CrossRefDOIProviderFactory implements PidProviderFactory {
 
     @Override
-    public PidProvider createPidProvider(String providerId) {
+    public PidProvider createPidProvider(String providerId, DvObjectServiceBean dvObjectService) {
         String providerType = JvmSettings.PID_PROVIDER_TYPE.lookup(providerId);
         if (!providerType.equals(CrossRefDOIProvider.TYPE)) {
             // Being asked to create a non-CrossRef provider
@@ -33,8 +35,10 @@ public class CrossRefDOIProviderFactory implements PidProviderFactory {
         String depositor = JvmSettings.CROSSREF_DEPOSITOR.lookup(providerId);
         String depositorEmail = JvmSettings.CROSSREF_DEPOSITOR_EMAIL.lookup(providerId);
 
-        return new CrossRefDOIProvider(providerId, providerLabel, providerAuthority, providerShoulder, identifierGenerationStyle,
-                datafilePidFormat, managedList, excludedList, baseUrl, apiUrl, username, password, depositor, depositorEmail);
+        return new CrossRefDOIProvider(providerId, providerLabel, providerAuthority, providerShoulder,
+                identifierGenerationStyle,
+                datafilePidFormat, managedList, excludedList, baseUrl, apiUrl, username, password, depositor,
+                depositorEmail);
     }
 
     public String getType() {

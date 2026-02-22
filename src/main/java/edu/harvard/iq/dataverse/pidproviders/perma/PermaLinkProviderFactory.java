@@ -7,11 +7,13 @@ import edu.harvard.iq.dataverse.pidproviders.PidProviderFactory;
 import edu.harvard.iq.dataverse.settings.JvmSettings;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+
 @AutoService(PidProviderFactory.class)
 public class PermaLinkProviderFactory implements PidProviderFactory {
-    
+
     @Override
-    public PidProvider createPidProvider(String providerId) {
+    public PidProvider createPidProvider(String providerId, DvObjectServiceBean dvObjectService) {
         String providerType = JvmSettings.PID_PROVIDER_TYPE.lookup(providerId);
         if (!providerType.equals(PermaLinkPidProvider.TYPE)) {
             // Being asked to create a non-EZId provider
@@ -28,11 +30,13 @@ public class PermaLinkProviderFactory implements PidProviderFactory {
         String excludedList = JvmSettings.PID_PROVIDER_EXCLUDED_LIST.lookupOptional(providerId).orElse("");
 
         String baseUrl = JvmSettings.PERMALINK_BASE_URL.lookupOptional(providerId)
-                .orElse(SystemConfig.getDataverseSiteUrlStatic() + "/citation?persistentId=" + PermaLinkPidProvider.PERMA_PROTOCOL + ":");
+                .orElse(SystemConfig.getDataverseSiteUrlStatic() + "/citation?persistentId="
+                        + PermaLinkPidProvider.PERMA_PROTOCOL + ":");
         ;
         String separator = JvmSettings.PERMALINK_SEPARATOR.lookupOptional(providerId).orElse("");
 
-        return new PermaLinkPidProvider(providerId, providerLabel, providerAuthority, providerShoulder, identifierGenerationStyle,
+        return new PermaLinkPidProvider(providerId, providerLabel, providerAuthority, providerShoulder,
+                identifierGenerationStyle,
                 datafilePidFormat, managedList, excludedList, baseUrl, separator);
     }
 

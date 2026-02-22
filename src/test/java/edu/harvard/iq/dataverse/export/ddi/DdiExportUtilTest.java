@@ -7,6 +7,7 @@ import edu.harvard.iq.dataverse.pidproviders.doi.datacite.DataCiteProviderFactor
 import edu.harvard.iq.dataverse.pidproviders.perma.PermaLinkPidProvider;
 import edu.harvard.iq.dataverse.pidproviders.perma.PermaLinkProviderFactory;
 import edu.harvard.iq.dataverse.settings.JvmSettings;
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.testing.JvmSetting;
 import edu.harvard.iq.dataverse.util.testing.LocalJvmSettings;
@@ -46,12 +47,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @LocalJvmSettings
-//Perma 1
+// Perma 1
 @JvmSetting(key = JvmSettings.PID_PROVIDER_LABEL, value = "perma 1", varArgs = "perma1")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_TYPE, value = PermaLinkPidProvider.TYPE, varArgs = "perma1")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_AUTHORITY, value = "PERM", varArgs = "perma1")
 @JvmSetting(key = JvmSettings.PERMALINK_BASE_URL, value = "https://example.org/citation?persistentId=perma:", varArgs = "perma1")
-//Perma 2
+// Perma 2
 @JvmSetting(key = JvmSettings.PID_PROVIDER_LABEL, value = "perma 2", varArgs = "perma2")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_TYPE, value = PermaLinkPidProvider.TYPE, varArgs = "perma2")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_AUTHORITY, value = "PERM2", varArgs = "perma2")
@@ -63,11 +64,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @JvmSetting(key = JvmSettings.PID_PROVIDER_AUTHORITY, value = "10.5072", varArgs = "dc1")
 @JvmSetting(key = JvmSettings.PID_PROVIDER_SHOULDER, value = "FK2", varArgs = "dc1")
 @JvmSetting(key = JvmSettings.DATACITE_MDS_API_URL, value = "https://mds.test.datacite.org/", varArgs = "dc1")
-@JvmSetting(key = JvmSettings.DATACITE_REST_API_URL, value = "https://api.test.datacite.org", varArgs ="dc1")
-@JvmSetting(key = JvmSettings.DATACITE_USERNAME, value = "test", varArgs ="dc1")
-@JvmSetting(key = JvmSettings.DATACITE_PASSWORD, value = "changeme", varArgs ="dc1")
+@JvmSetting(key = JvmSettings.DATACITE_REST_API_URL, value = "https://api.test.datacite.org", varArgs = "dc1")
+@JvmSetting(key = JvmSettings.DATACITE_USERNAME, value = "test", varArgs = "dc1")
+@JvmSetting(key = JvmSettings.DATACITE_PASSWORD, value = "changeme", varArgs = "dc1")
 
-//List to instantiate
+// List to instantiate
 @JvmSetting(key = JvmSettings.PID_PROVIDERS, value = "perma1, perma2, dc1")
 public class DdiExportUtilTest {
 
@@ -75,10 +76,12 @@ public class DdiExportUtilTest {
 
     @Mock
     SettingsServiceBean settingsSvc;
-    
+
     @BeforeEach
     void setup() {
-        Mockito.lenient().when(settingsSvc.isTrueForKey(SettingsServiceBean.Key.ExportInstallationAsDistributorOnlyWhenNotSet, false)).thenReturn(false);
+        Mockito.lenient().when(
+                settingsSvc.isTrueForKey(SettingsServiceBean.Key.ExportInstallationAsDistributorOnlyWhenNotSet, false))
+                .thenReturn(false);
         DdiExportUtil.injectSettingsService(settingsSvc);
     }
 
@@ -90,18 +93,18 @@ public class DdiExportUtilTest {
 
         PidUtil.clearPidProviders();
 
-        //Read list of providers to add
+        // Read list of providers to add
         List<String> providers = JvmSettings.PID_PROVIDERS.lookupSplittedList();
-        //Iterate through the list of providers and add them using the PidProviderFactory of the appropriate type
+        // Iterate through the list of providers and add them using the
+        // PidProviderFactory of the appropriate type
         for (String providerId : providers) {
             System.out.println("Loading provider: " + providerId);
             String type = JvmSettings.PID_PROVIDER_TYPE.lookup(providerId);
             PidProviderFactory factory = pidProviderFactoryMap.get(type);
-            PidUtil.addToProviderList(factory.createPidProvider(providerId));
+            PidUtil.addToProviderList(factory.createPidProvider(providerId, null));
         }
     }
-    
-    
+
     @Test
     public void testJson2DdiNoFiles() throws Exception {
         // given
@@ -110,15 +113,14 @@ public class DdiExportUtilTest {
         Path ddiFile = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-finch1.xml");
         String datasetAsDdi = XmlPrinter.prettyPrintXml(Files.readString(ddiFile, StandardCharsets.UTF_8));
         logger.fine(datasetAsDdi);
-        
+
         // when
         String result = DdiExportUtil.datasetDtoAsJson2ddi(datasetVersionAsJson);
         logger.fine(result);
-        
+
         // then
         XmlAssert.assertThat(result).and(datasetAsDdi).ignoreWhitespace().areSimilar();
     }
-
 
     @Test
     public void testJson2DdiPermaLink() throws Exception {
@@ -137,11 +139,11 @@ public class DdiExportUtilTest {
         XmlAssert.assertThat(result).and(datasetAsDdi).ignoreWhitespace().areSimilar();
     }
 
-
     @Test
     public void testJson2DdiPermaLinkWithSeparator() throws Exception {
         // given
-        Path datasetVersionJson = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-perma-w-separator.json");
+        Path datasetVersionJson = Path
+                .of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-perma-w-separator.json");
         String datasetVersionAsJson = Files.readString(datasetVersionJson, StandardCharsets.UTF_8);
         Path ddiFile = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-perma-w-separator.xml");
         String datasetAsDdi = XmlPrinter.prettyPrintXml(Files.readString(ddiFile, StandardCharsets.UTF_8));
@@ -158,7 +160,8 @@ public class DdiExportUtilTest {
     @Test
     public void testJson2DdiNoFilesTermsOfUse() throws Exception {
         // given
-        Path datasetVersionJson = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-finch-terms-of-use.json");
+        Path datasetVersionJson = Path
+                .of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-finch-terms-of-use.json");
         String datasetVersionAsJson = Files.readString(datasetVersionJson, StandardCharsets.UTF_8);
         Path ddiFile = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-finch-terms-of-use.xml");
         String datasetAsDdi = XmlPrinter.prettyPrintXml(Files.readString(ddiFile, StandardCharsets.UTF_8));
@@ -175,16 +178,17 @@ public class DdiExportUtilTest {
     @Test
     public void testExportDDI() throws Exception {
         // given
-        Path datasetVersionJson = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-create-new-all-ddi-fields.json");
+        Path datasetVersionJson = Path
+                .of("src/test/java/edu/harvard/iq/dataverse/export/ddi/dataset-create-new-all-ddi-fields.json");
         String datasetVersionAsJson = Files.readString(datasetVersionJson, StandardCharsets.UTF_8);
         Path ddiFile = Path.of("src/test/java/edu/harvard/iq/dataverse/export/ddi/exportfull.xml");
         String datasetAsDdi = XmlPrinter.prettyPrintXml(Files.readString(ddiFile, StandardCharsets.UTF_8));
         logger.fine(datasetAsDdi);
-        
+
         // when
         String result = DdiExportUtil.datasetDtoAsJson2ddi(datasetVersionAsJson);
         logger.fine(XmlPrinter.prettyPrintXml(result));
-        
+
         // then
         XmlAssert.assertThat(result).and(datasetAsDdi).ignoreWhitespace().areSimilar();
     }
@@ -205,13 +209,14 @@ public class DdiExportUtilTest {
         String result = DdiExportUtil.datasetDtoAsJson2ddi(datasetVersionAsJson);
         logger.fine(XmlPrinter.prettyPrintXml(result));
         boolean filesMinimallySupported = false;
-        // TODO: 
+        // TODO:
         // setting "filesMinimallySupported" to false here, thus disabling the test;
-        // before we can reenable it again, we'll need to figure out what to do 
+        // before we can reenable it again, we'll need to figure out what to do
         // with the access URLs, that are now included in the fileDscr and otherMat
-        // sections. So a) we'll need to add something like URI=http://localhost/api/access/datafile/12 to 
-        // dataset-spruce1.xml, above; and modify the DDI export util so that 
-        // it can be instructed to use "localhost" for the API urls (otherwise 
+        // sections. So a) we'll need to add something like
+        // URI=http://localhost/api/access/datafile/12 to
+        // dataset-spruce1.xml, above; and modify the DDI export util so that
+        // it can be instructed to use "localhost" for the API urls (otherwise
         // it will use the real hostname). -- L.A. 4.5
         if (filesMinimallySupported) {
             assertEquals(datasetAsDdi, result);
@@ -225,31 +230,31 @@ public class DdiExportUtilTest {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         // when
-        DdiExportUtil.datasetHtmlDDI( new FileInputStream(fileXML), byteArrayOutputStream);
+        DdiExportUtil.datasetHtmlDDI(new FileInputStream(fileXML), byteArrayOutputStream);
         String generatedDdiHTML = byteArrayOutputStream.toString(StandardCharsets.UTF_8);
-        
+
         // then
         assertNotNull(generatedDdiHTML);
         assertFalse(generatedDdiHTML.isEmpty());
         assertFalse(generatedDdiHTML.isBlank());
-    
+
         // pipe through pretty printer before parsing as DOM
         generatedDdiHTML = HtmlPrinter.prettyPrint(generatedDdiHTML);
         Document generatedDdiHtmlDom = W3CDom.convert(Jsoup.parse(generatedDdiHTML));
-        
+
         // read comparison file to build diff
         Path htmlFile = Path.of("src/test/resources/html/dct_codebook.html");
         String subjectHtml = HtmlPrinter.prettyPrint(new String(Files.readAllBytes(htmlFile)));
         Document subjectHtmlDom = W3CDom.convert(Jsoup.parse(subjectHtml));
-    
+
         // compare generated and sample
         Diff diff = DiffBuilder.compare(subjectHtmlDom)
-                        .withTest(generatedDdiHtmlDom)
-                        .ignoreComments()
-                        .ignoreWhitespace()
-                        .checkForSimilar()
-                        .build();
-    
+                .withTest(generatedDdiHtmlDom)
+                .ignoreComments()
+                .ignoreWhitespace()
+                .checkForSimilar()
+                .build();
+
         // assert matching and print differences if any.
         diff.getDifferences().forEach(d -> logger.info(d.toString()));
         assertFalse(diff.hasDifferences());

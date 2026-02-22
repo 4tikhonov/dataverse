@@ -7,11 +7,13 @@ import edu.harvard.iq.dataverse.pidproviders.PidProviderFactory;
 import edu.harvard.iq.dataverse.settings.JvmSettings;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+
 @AutoService(PidProviderFactory.class)
 public class EZIdProviderFactory implements PidProviderFactory {
 
     @Override
-    public PidProvider createPidProvider(String providerId) {
+    public PidProvider createPidProvider(String providerId, DvObjectServiceBean dvObjectService) {
         String providerType = JvmSettings.PID_PROVIDER_TYPE.lookup(providerId);
         if (!providerType.equals(EZIdDOIProvider.TYPE)) {
             // Being asked to create a non-EZId provider
@@ -31,7 +33,8 @@ public class EZIdProviderFactory implements PidProviderFactory {
         String username = JvmSettings.EZID_USERNAME.lookup(providerId);
         String password = JvmSettings.EZID_PASSWORD.lookup(providerId);
 
-        return new EZIdDOIProvider(providerId, providerLabel, providerAuthority, providerShoulder, identifierGenerationStyle, datafilePidFormat,
+        return new EZIdDOIProvider(providerId, providerLabel, providerAuthority, providerShoulder,
+                identifierGenerationStyle, datafilePidFormat,
                 managedList, excludedList, baseUrl, username, password);
     }
 

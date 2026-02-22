@@ -294,8 +294,7 @@ Persistent Identifiers and Publishing Datasets
 Persistent identifiers (PIDs) are a required and integral part of the Dataverse Software. They provide a URL that is
 guaranteed to resolve to the datasets or files they represent. The Dataverse Software currently supports creating
 identifiers using any of several PID types. The most appropriate PIDs for public data are DOIs (e.g., provided by
-DataCite or EZID) and Handles. Dataverse also supports PermaLinks which could be useful for intranet or catalog use
-cases. A DOI provider called "FAKE" is recommended only for testing and development purposes.
+DataCite or EZID) and Handles. Dataverse also supports PermaLinks and Decentralized Identifiers (DIDs). A DOI provider called "FAKE" is recommended only for testing and development purposes.
 
 Dataverse can be configured with one or more PID providers, each of which can mint and manage PIDs with a given protocol 
 (e.g., doi, handle, permalink) using a specific service provider/account (e.g. with DataCite, EZId, or HandleNet) 
@@ -400,7 +399,7 @@ dataverse.spi.pidproviders.directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The path to the directory where JAR files containing additional types of PID Providers can be added.
-Dataverse includes providers that support DOIs (DataCite, EZId, or FAKE), Handles, and PermaLinks.
+Dataverse includes providers that support DOIs (DataCite, EZId, or FAKE), Handles, PermaLinks, and Decentralized Identifiers (DIDs).
 PID provider jar files added to this directory can replace any of these or add new PID Providers.
 
 Per-Provider Settings
@@ -410,10 +409,7 @@ Each Provider listed by id in the dataverse.pid.providers setting must be config
 
 .. _dataverse.pid.*.type:
 
-dataverse.pid.*.type
-^^^^^^^^^^^^^^^^^^^^
-
-The Provider type, currently one of ``datacite``, ``ezid``, ``FAKE``, ``hdl``, or ``perma``. The type defines which protocol a service supports (DOI, Handle, or PermaLink) and, for DOI Providers, which 
+The Provider type, currently one of ``datacite``, ``ezid``, ``FAKE``, ``hdl``, ``perma``, or ``DID``. The type defines which protocol a service supports (DOI, Handle, PermaLink, or DID) and, for DOI Providers, which 
 DOI service is used.
 
 .. _dataverse.pid.*.label:
@@ -711,6 +707,62 @@ By default this setting is false.
 
 Set ``auth-handle`` to <prefix>/<suffix> to be used on a global handle service when the public key is NOT stored in the default handle.
 This setting is optional. If the public key is, for instance, stored in handle: ``21.T12996/USER01``, ``auth-handle`` should be set to this value.
+
+
+.. _dataverse.pid.*.did:
+
+DID-specific Settings
+^^^^^^^^^^^^^^^^^^^^^
+
+PID Providers of type ``DID`` use the Decentralized Identifier protocol. 
+
+DIDs in Dataverse are resolved using a Universal Resolver. By default, the universal resolver at ``https://dev.uniresolver.io/1.0/identifiers/`` is used.
+
+When configuring a DID provider, the ``authority`` should specify the DID method and any necessary namespace (e.g., ``web:example.com``).
+
+.. _dataverse.pid.*.did.api-url:
+
+dataverse.pid.*.did.api-url
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The base URL of the ODRL API used to register new DIDs.
+Current valid value is "https://odrl.dev.codata.org".
+
+.. note::
+   The separator for DIDs is set to ``:`` by default.
+
+Example: Switching to DID identifiers by default with ODRL
+##########################################################
+
+To switch your Dataverse installation to use DIDs by default registered via ODRL, follow these steps:
+
+1. **Add the DID provider to the list of providers**:
+
+   .. code-block:: bash
+
+      asadmin create-jvm-options "-Ddataverse.pid.providers=did1"
+
+2. **Set the DID provider as the default**:
+
+   .. code-block:: bash
+
+      asadmin create-jvm-options "-Ddataverse.pid.default-provider=did1"
+
+3. **Configure the DID provider settings**:
+
+   .. code-block:: bash
+
+      asadmin create-jvm-options "-Ddataverse.pid.did1.type=DID"
+      asadmin create-jvm-options "-Ddataverse.pid.did1.label=My DID Provider"
+      asadmin create-jvm-options "-Ddataverse.pid.did1.authority=oyd"
+      asadmin create-jvm-options "-Ddataverse.pid.did1.api-url=https\://odrl.dev.codata.org"
+
+4. **Restart Payara** to apply the changes.
+
+5. **Verify DID registration**
+   After restarting, publish a dataset and check the logs for messages like ``Successfully registered DID:``.
+   The resolver URL now uses a fragment (``#``) – e.g. ``https://dev.uniresolver.io/#did:oyd:...``.
+
 
 
 .. _pids-doi-configuration:

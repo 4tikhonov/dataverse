@@ -7,11 +7,13 @@ import edu.harvard.iq.dataverse.pidproviders.PidProviderFactory;
 import edu.harvard.iq.dataverse.settings.JvmSettings;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+
 @AutoService(PidProviderFactory.class)
 public class DataCiteProviderFactory implements PidProviderFactory {
 
     @Override
-    public PidProvider createPidProvider(String providerId) {
+    public PidProvider createPidProvider(String providerId, DvObjectServiceBean dvObjectService) {
         String providerType = JvmSettings.PID_PROVIDER_TYPE.lookup(providerId);
         if (!providerType.equals(DataCiteDOIProvider.TYPE)) {
             // Being asked to create a non-DataCite provider
@@ -27,12 +29,15 @@ public class DataCiteProviderFactory implements PidProviderFactory {
         String managedList = JvmSettings.PID_PROVIDER_MANAGED_LIST.lookupOptional(providerId).orElse("");
         String excludedList = JvmSettings.PID_PROVIDER_EXCLUDED_LIST.lookupOptional(providerId).orElse("");
 
-        String mdsUrl = JvmSettings.DATACITE_MDS_API_URL.lookupOptional(providerId).orElse("https://mds.test.datacite.org");
-        String apiUrl = JvmSettings.DATACITE_REST_API_URL.lookupOptional(providerId).orElse("https://api.test.datacite.org");
+        String mdsUrl = JvmSettings.DATACITE_MDS_API_URL.lookupOptional(providerId)
+                .orElse("https://mds.test.datacite.org");
+        String apiUrl = JvmSettings.DATACITE_REST_API_URL.lookupOptional(providerId)
+                .orElse("https://api.test.datacite.org");
         String username = JvmSettings.DATACITE_USERNAME.lookup(providerId);
         String password = JvmSettings.DATACITE_PASSWORD.lookup(providerId);
 
-        return new DataCiteDOIProvider(providerId, providerLabel, providerAuthority, providerShoulder, identifierGenerationStyle,
+        return new DataCiteDOIProvider(providerId, providerLabel, providerAuthority, providerShoulder,
+                identifierGenerationStyle,
                 datafilePidFormat, managedList, excludedList, mdsUrl, apiUrl, username, password);
     }
 
